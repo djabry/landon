@@ -3,6 +3,7 @@ import {object, string} from 'yup';
 import {CreatePropertyRequest} from './create.property.request';
 import {Property} from './property';
 import {DocType} from './doc.type';
+import {createHash} from 'crypto';
 
 export class MyChainCode extends Chaincode {
 
@@ -14,7 +15,7 @@ export class MyChainCode extends Chaincode {
     }));
 
     // Create hash of the boundary data
-    const boundaryHash = await this.calculateHah(stubHelper, verifiedArgs.boundaryData);
+    const boundaryHash = await this.calculateHah(verifiedArgs.boundaryData);
 
     const property: Property = {
       docType: DocType.Property,
@@ -26,8 +27,10 @@ export class MyChainCode extends Chaincode {
   }
 
   // TODO: Change this to a more advanced hashing algorithm that reduces the probability of clashes
-  private async calculateHah(stubHelper: StubHelper, input: string): Promise<string> {
-    stubHelper.getChaincodeCrypto().hash(input);
+  private async calculateHah(input: string): Promise<string> {
+    const hash = createHash('md5');
+    hash.update(input);
+    return hash.digest('hex');
   }
 
 
