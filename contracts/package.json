@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "webpack --mode production",
-    "test": "mocha src/contracts/**/*.spec.ts",
+    "test": "mocha src/**/*.spec.ts",
     "start": "node index.js"
   },
   "private": true,
