@@ -1,0 +1,33 @@
+{
+  "name": "landon",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "webpack --mode production",
+    "test": "mocha src/contracts/**/*.spec.ts",
+    "start": "node index.js"
+  },
+  "private": true,
+  "dependencies": {
+    "@theledger/fabric-chaincode-utils": "^4.0.0",
+    "yup": "^0.26.6"
+  },
+  "devDependencies": {
+    "@theledger/fabric-mock-stub": "^3.0.0",
+    "@types/chai": "^4.1.6",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "~8.9.4",
+    "@types/yup": "^0.26.0",
+    "chai": "^4.2.0",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.4",
+    "mocha": "^5.2.0",
+    "ts-loader": "^5.2.2",
+    "ts-node": "^7.0.1",
+    "tslint": "~5.11.0",
+    "typescript": "~3.1.1",
+    "webpack": "^4.23.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-node-externals": "^1.7.2",
+    "zip-webpack-plugin": "^3.0.0"
+  }
+}

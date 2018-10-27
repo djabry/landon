@@ -7,10 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "build:contracts": "webpack --mode production",
-    "package:contracts": "zip dist/out-ts/src/contracts dist.zip",
-    "test:chaincode": "mocha src/contracts/**/*.spec.ts"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
