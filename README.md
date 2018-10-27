@@ -1,6 +1,6 @@
 # Landon
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.3.
+This project aims to address the problem of land border disputes for HMLR as part of the Oracle Blockchain Hackathon 2018 in London
 
 ## Development server
 
