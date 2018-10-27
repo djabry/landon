@@ -8,6 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "build:contracts": "webpack --mode production",
+    "package:contracts": "zip dist/out-ts/src/contracts dist.zip",
     "test:chaincode": "mocha src/contracts/**/*.spec.ts"
   },
   "private": true,
@@ -42,6 +44,7 @@
     "@types/request": "^2.48.0",
     "@types/yup": "^0.26.0",
     "chai": "^4.2.0",
+    "clean-webpack-plugin": "^0.1.19",
     "codelyzer": "~4.5.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
@@ -52,8 +55,12 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "mocha": "^5.2.0",
     "protractor": "~5.4.0",
+    "ts-loader": "^5.2.2",
     "ts-node": "^7.0.1",
     "tslint": "~5.11.0",
-    "typescript": "~3.1.1"
+    "typescript": "~3.1.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-node-externals": "^1.7.2",
+    "zip-webpack-plugin": "^3.0.0"
   }
 }
