@@ -19,8 +19,16 @@ export class PropertyChainCode extends Chaincode {
       ownerId: string().required(),
       boundaryData: string().required() // TODO: Use a URL pointing to the binary data in future to enable usage of large documents
     }));
+
+    const newBoundaries = this.toPolygon(verifiedArgs.boundaryData);
     const closeProperties =
       await this.findCloseProperties(stubHelper, {latitude: verifiedArgs.latitude, longitude: verifiedArgs.longitude});
+    for (const p of closeProperties) {
+      const boundaryData = await this.getBoundaryData(p);
+      if (this.overlaps(boundaryData, newBoundaries)) {
+        throw new Error('Property overlaps another');
+      }
+    }
 
     // Create hash of the boundary data
     const boundaryHash = await this.calculateHah(verifiedArgs.boundaryData);
@@ -73,12 +81,20 @@ export class PropertyChainCode extends Chaincode {
     const properties = results as Property[];
     const coordinates = properties.map(property => ({...property.centre, property}));
     geolib.orderByDistance(loc, coordinates);
-    return coordinates.map(c => c.property);
+    return coordinates.map(c => c.property).slice(0, 6);
 
   }
 
-  async overlaps(property1: Property, property2: Property): Promise<boolean> {
-    return false;
+  toPolygon(boundaryData: string): GeoCoordinate[] {
+    return JSON.parse(boundaryData);
+  }
+
+  overlaps(bounds1: GeoCoordinate[], bounds2: GeoCoordinate[]): boolean {
+   return !!bounds1.find(bound => geolib.isPointInside(bound, bounds2));
+  }
+
+  async getBoundaryData(property: Property): Promise<GeoCoordinate[]> {
+    return null;
   }
 
   async setOwner(stubHelper: StubHelper, args: string[]): Promise<void> {
@@ -91,8 +107,6 @@ export class PropertyChainCode extends Chaincode {
     return await stubHelper.putState(verifiedArgs.propertyId, property);
 
   }
-
-
 
   async findProperty(stubHelper: StubHelper, args: string[]): Promise<Property>  {
     const readPropertyRequest = await Helpers.checkArgs<FindPropertyRequest>(args[0], object({
