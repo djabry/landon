@@ -33,14 +33,41 @@ export class PropertyChainCode extends Chaincode {
     await stubHelper.putState(verifiedArgs.propertyId, property);
   }
 
-  async findCloseProperties(stubHelper: StubHelper, property: Property): Promise<Property> {
+  async findCloseProperties(stubHelper: StubHelper, id: string, property: Property): Promise<Property[]> {
+    const distance = 100;
+    const bottomPoint = geolib.computeDestinationPoint(property.centre, distance, 180);
+    const topPoint = geolib.computeDestinationPoint(property.centre, distance, 0);
+    const eastPoint = geolib.computeDestinationPoint(property.centre, distance, 90);
+    const westPoint = geolib.computeDestinationPoint(property.centre, distance, 270);
     const properties = await stubHelper.getQueryResultAsList({
       selector: {
-        'centre.latitude': {
-          '$gt': ''
-        }
+        '$and': [
+          {
+            'centre.latitude': {
+              '$gt': bottomPoint.latitude
+            }
+          },
+          {
+            'centre.latitude': {
+              '$lt': topPoint.latitude
+            }
+          },
+          {
+            'centre.longitude': {
+              '$gt': westPoint.longitude
+            }
+          },
+          {
+            'centre.longitude': {
+              '$lt': eastPoint.longitude
+            }
+          }
+        ]
+
       }
     });
+
+    return properties as Property[];
 
   }
 
