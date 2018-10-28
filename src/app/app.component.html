@@ -3,12 +3,15 @@
     <div>{{title}}</div>
   </mat-toolbar>
   <div class="main">
-    <app-detail></app-detail>
+    <app-detail [property]="property"></app-detail>
     <div class="map">
       <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
         <!--<agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>-->
         <div *ngIf="paths">
           <agm-polygon [paths]="paths"></agm-polygon>
+        </div>
+        <div *ngIf="oldPaths">
+          <agm-polygon *ngFor="let oldPath of oldPaths" [paths]="oldPath" [fillColor]="'green'"></agm-polygon>
         </div>
       </agm-map>
     </div>

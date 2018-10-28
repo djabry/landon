@@ -8,7 +8,6 @@ import {Property} from './property';
 import {SetOwnerRequest} from './set.owner.request';
 import {FunctionName} from './function.name';
 import * as geolib from 'geolib';
-import {ObjectStore} from './object.store';
 
 let instance: PropertyChainCode;
 let stub;

@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {BlockService} from '../block.service';
+import {Property} from '../../../contracts/src/property';
+import {CreatePropertyRequest} from '../../../contracts/src/create.property.request';
 
 @Component({
   selector: 'app-detail',
@@ -9,6 +11,9 @@ import {BlockService} from '../block.service';
 export class DetailComponent implements OnInit {
 
   title = 'Create a boundary';
+
+  @Input()
+  property: CreatePropertyRequest;
 
   constructor(private blockService: BlockService) {
   }
