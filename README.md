@@ -2,6 +2,8 @@
 
 This project aims to address the problem of land border disputes for HMLR as part of the Oracle Blockchain Hackathon 2018 in London
 
+Try it out here: http://landon-borders.s3-website-eu-west-1.amazonaws.com/
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
