@@ -18,6 +18,10 @@ export class DetailComponent implements OnInit {
   constructor(private blockService: BlockService) {
   }
 
+  async onSubmit() {
+    await this.blockService.createProperty(this.property);
+  }
+
   ngOnInit() {
   }
 
