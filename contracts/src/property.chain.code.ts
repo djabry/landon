@@ -8,11 +8,10 @@ import {FindPropertyRequest} from './find.property.request';
 import {SetOwnerRequest} from './set.owner.request';
 import {GeoCoordinate} from './geo.coordinate';
 import * as geolib from 'geolib';
-import {ObjectStore} from './object.store';
 
 export class PropertyChainCode extends Chaincode {
 
-  constructor(private objectStore: ObjectStore) {
+  constructor() {
     super();
   }
 
@@ -29,8 +28,7 @@ export class PropertyChainCode extends Chaincode {
     const closeProperties =
       await this.findCloseProperties(stubHelper, {latitude: verifiedArgs.latitude, longitude: verifiedArgs.longitude});
     for (const p of closeProperties) {
-      const boundaryData = await this.getBoundaryData(p.id);
-      if (this.overlaps(boundaryData, verifiedArgs.boundaryData)) {
+      if (this.overlaps(p.boundaryData, verifiedArgs.boundaryData)) {
         throw new Error('Property overlaps another');
       }
     }
@@ -100,10 +98,10 @@ export class PropertyChainCode extends Chaincode {
    return !!bounds1.find(bound => geolib.isPointInside(bound, bounds2));
   }
 
-  async getBoundaryData(propertyId: string): Promise<GeoCoordinate[]> {
+/*  async getBoundaryData(propertyId: string): Promise<GeoCoordinate[]> {
     const data = await this.objectStore.get(propertyId);
     return JSON.parse(data);
-  }
+  }*/
 
   async setOwner(stubHelper: StubHelper, args: string[]): Promise<void> {
     const verifiedArgs = await Helpers.checkArgs<SetOwnerRequest>(args[0], object({

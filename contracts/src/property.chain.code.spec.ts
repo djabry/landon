@@ -15,7 +15,7 @@ let stub;
 describe('Property chain code', () => {
 
   before('Create the chain code and stub', () => {
-    instance = new PropertyChainCode(new ObjectStore());
+    instance = new PropertyChainCode();
   });
 
   beforeEach('Create a stub', () => {
