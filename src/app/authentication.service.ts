@@ -14,12 +14,20 @@ export class AuthenticationService {
     this.credentialsKey = 'oracleCreds';
   }
 
-  async requestCredentials(): Promise<UsernamePasswordCredentials> {
+  async requestBlockchainCredentials(): Promise<UsernamePasswordCredentials> {
     if (localStorage.getItem(this.credentialsKey)) {
-      return JSON.parse(localStorage.getItem(this.credentialsKey));
+      const creds = JSON.parse(localStorage.getItem(this.credentialsKey)) as UsernamePasswordCredentials;
+      try {
+        await this.validateCredentials(creds);
+        return creds;
+      } catch (err) {
+        localStorage.removeItem(this.credentialsKey);
+        throw err;
+      }
     } else {
       const credentialsDialog = this.dialog.open(CredentialsComponent);
       credentialsDialog.disableClose = true;
+      credentialsDialog.componentInstance.title = 'Oracle Blockchain credentials';
       const result = await credentialsDialog.afterClosed().toPromise() as UsernamePasswordCredentials;
       await this.validateCredentials(result);
       localStorage.setItem(this.credentialsKey, JSON.stringify(result));
@@ -34,8 +42,8 @@ export class AuthenticationService {
   }
 
   async validateCredentials(creds: UsernamePasswordCredentials) {
-    /*const response = await this.httpClient.get(`${environment.oracleEndpoint}/bcsgw/rest/version`, {
+    const response = await this.httpClient.get(`${environment.oracleEndpoint}/bcsgw/rest/version`, {
       headers: this.toRequestHeaders(creds)
-    }).toPromise();*/
+    }).toPromise();
   }
 }

@@ -10,6 +10,7 @@ import {UsernamePasswordCredentials} from '../username.password.credentials';
 })
 export class CredentialsComponent implements OnInit {
 
+  title: string;
   password: string;
   username: string;
   hide = true;

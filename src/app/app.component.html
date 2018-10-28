@@ -4,5 +4,8 @@
   </mat-toolbar>
   <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
     <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+    <div *ngIf="paths">
+      <agm-polygon [paths]="paths"></agm-polygon>
+    </div>
   </agm-map>
 </div>
