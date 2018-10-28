@@ -4,6 +4,7 @@ import {AuthenticationService} from './authentication.service';
 import * as geolib from 'geolib';
 import {CreatePropertyRequest} from '../../contracts/src/create.property.request';
 import {RandomPolygonGenerator} from './random.polygon.generator';
+import {GeoCoordinate} from '../../contracts/src/geo.coordinate';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -32,26 +33,42 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     window.navigator.geolocation.getCurrentPosition((position) => {
-      this.lat = position.coords.latitude;
-      this.lng = position.coords.longitude;
-      this.paths = this.generateRandomCoordinates(position);
-      this.oldPaths = ([0]).map(() => this.generateRandomCoordinates(position));
-      this.zoom = 20;
-      const boundaryData = this.paths.map(l => ({latitude: l.lat, longitude: l.lng}));
-      this.property = {
-        propertyId: this.guid(),
-        boundaryData: boundaryData,
-        ownerId: this.guid(),
-        ...geolib.getCenter(boundaryData),
-      };
-      this.authService.requestBlockchainCredentials();
+
+      this.initialise({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+    }, fail => {
+      this.initialise();
     });
 
   }
 
-  generateRandomCoordinates(start: Position): LatLngLiteral[] {
+  async initialise(position: GeoCoordinate = {
+    latitude: 51.519186600000005,
+    longitude: -0.0874596
+  }) {
+
+    this.lat = position.latitude;
+    this.lng = position.longitude;
+    this.paths = this.generateRandomCoordinates(position);
+    this.oldPaths = ([0]).map(() => this.generateRandomCoordinates(position));
+    this.zoom = 20;
+    const boundaryData = this.paths.map(l => ({latitude: l.lat, longitude: l.lng}));
+    this.property = {
+      propertyId: this.guid(),
+      boundaryData: boundaryData,
+      ownerId: this.guid(),
+      ...geolib.getCenter(boundaryData),
+    };
+    this.authService.requestBlockchainCredentials();
+
+
+  }
+
+  generateRandomCoordinates(position: GeoCoordinate): LatLngLiteral[] {
     return this.polygonGen
-      .generatePolygon({latitude: start.coords.latitude, longitude: start.coords.longitude})
+      .generatePolygon(position)
       .map(l => ({lat: l.latitude, lng: l.longitude}));
 
 
