@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  oracleEndpoint: 'https://E0BBA3A3145845FAA4BCC18391B1FA6C.blockchain.ocp.oraclecloud.com:443/restproxy1'
 };
 
 /*

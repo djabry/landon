@@ -38,10 +38,6 @@ export class PropertyChainCode extends Chaincode {
 
   }
 
-  private async findPropertyFromId(stubHelper: StubHelper, propertyId: string): Promise<Property> {
-    return (await stubHelper.getStateAsObject(propertyId)) as Property;
-  }
-
   async findProperty(stubHelper: StubHelper, args: string[]): Promise<Property>  {
     const readPropertyRequest = await Helpers.checkArgs<FindPropertyRequest>(args[0], object({
       id: string().required()
@@ -54,6 +50,10 @@ export class PropertyChainCode extends Chaincode {
     const hash = createHash('md5');
     hash.update(input);
     return hash.digest('hex');
+  }
+
+  private async findPropertyFromId(stubHelper: StubHelper, propertyId: string): Promise<Property> {
+    return (await stubHelper.getStateAsObject(propertyId)) as Property;
   }
 
 

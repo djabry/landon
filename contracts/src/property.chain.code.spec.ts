@@ -6,6 +6,7 @@ import {CreatePropertyRequest} from './create.property.request';
 import {FindPropertyRequest} from './find.property.request';
 import {Property} from './property';
 import {SetOwnerRequest} from './set.owner.request';
+import {FunctionName} from './function.name';
 
 let instance: PropertyChainCode;
 let stub;
@@ -30,7 +31,7 @@ describe('Property chain code', () => {
       boundaryData: 'bar',
       ownerId: 'person1'
     };
-    const response = await stub.mockInvoke('tx1', ['createProperty', JSON.stringify(request)]);
+    const response = await stub.mockInvoke('tx1', [FunctionName.createProperty, JSON.stringify(request)]);
     expect(response.status).to.equal(200, 'Failed to create property');
   });
 
@@ -43,7 +44,7 @@ describe('Property chain code', () => {
         boundaryData: 'bar',
         ownerId: 'person1'
       };
-      const writeResponse = await stub.mockInvoke('tx1', ['createProperty', JSON.stringify(createRequest)]);
+      const writeResponse = await stub.mockInvoke('tx1', [FunctionName.createProperty, JSON.stringify(createRequest)]);
       expect(writeResponse.status).to.equal(200, 'Failed to create property');
     });
 
@@ -51,7 +52,7 @@ describe('Property chain code', () => {
       const findPropertyRequest: FindPropertyRequest = {
         id: createRequest.propertyId
       };
-      const readResponse = await stub.mockInvoke('tx2', ['findProperty', JSON.stringify(findPropertyRequest)]);
+      const readResponse = await stub.mockInvoke('tx2', [FunctionName.findProperty, JSON.stringify(findPropertyRequest)]);
       const propertyObject = Transform.bufferToObject(readResponse.payload) as Property;
       expect(propertyObject.ownerId).to.equal(createRequest.ownerId);
       expect(propertyObject.boundaryHash).to.be.a('string').and.have.lengthOf(32);
@@ -62,12 +63,12 @@ describe('Property chain code', () => {
         ownerId: `${createRequest.ownerId}1`,
         propertyId: createRequest.propertyId
       };
-      const response = await stub.mockInvoke('tx1', ['setOwner', JSON.stringify(request)]);
+      const response = await stub.mockInvoke('tx1', [FunctionName.setOwner, JSON.stringify(request)]);
       expect(response.status).to.equal(200, 'Failed to set owner');
       const findPropertyRequest: FindPropertyRequest = {
         id: createRequest.propertyId
       };
-      const readResponse = await stub.mockInvoke('tx2', ['findProperty', JSON.stringify(findPropertyRequest)]);
+      const readResponse = await stub.mockInvoke('tx2', [FunctionName.findProperty, JSON.stringify(findPropertyRequest)]);
       const propertyObject = Transform.bufferToObject(readResponse.payload) as Property;
       expect(propertyObject.ownerId).to.equal(request.ownerId);
 
