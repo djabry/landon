@@ -3,7 +3,7 @@
     {{title}}
   </mat-card-title>
   <mat-card-content>
-    <form>
+    <form (submit)="onSubmit()">
       <div *ngIf="property">
         <div>
           <mat-form-field>
@@ -15,8 +15,8 @@
             <input matInput placeholder="Owner id" [(ngModel)]="property.ownerId" type="text" name="ownerId">
           </mat-form-field>
         </div>
+        <button type="submit" mat-button>Create</button>
       </div>
-      <button mat-button>Create</button>
     </form>
   </mat-card-content>
 

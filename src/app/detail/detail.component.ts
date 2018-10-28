@@ -19,7 +19,10 @@ export class DetailComponent implements OnInit {
   }
 
   async onSubmit() {
+    console.log('Creating new property');
     await this.blockService.createProperty(this.property);
+    console.log('Created new property');
+    this.property = null;
   }
 
   ngOnInit() {
