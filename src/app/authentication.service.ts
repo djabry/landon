@@ -42,7 +42,7 @@ export class AuthenticationService {
   }
 
   async validateCredentials(creds: UsernamePasswordCredentials) {
-    const response = await this.httpClient.get(`${environment.oracleEndpoint}/bcsgw/rest/version`, {
+    const response = await this.httpClient.get(`${environment.proxyEndpoint}/version`, {
       headers: this.toRequestHeaders(creds)
     }).toPromise();
   }

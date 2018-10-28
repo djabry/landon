@@ -29,7 +29,7 @@ export class BlockService {
 
   async findProperty(propertyId: string): Promise<Property> {
     const creds = await this.authService.requestBlockchainCredentials();
-    const resource = `${environment.oracleEndpoint}/bcsgw/rest/v1/transaction/invocation`;
+    const resource = `${environment.proxyEndpoint}/invoke`;
     const findPropertyRequest: FindPropertyRequest = {
       id: propertyId
     };

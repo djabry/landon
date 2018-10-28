@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
       this.lng = position.coords.longitude;
       this.paths = this.generateRandomCoordinates(position);
       this.zoom = 20;
+      this.authService.requestBlockchainCredentials();
     });
 
   }
