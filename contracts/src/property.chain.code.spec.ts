@@ -28,6 +28,8 @@ describe('Property chain code', () => {
   it('Creates some land', async () => {
     const request: CreatePropertyRequest = {
       propertyId: 'foo',
+      latitude: 0,
+      longitude: 0,
       boundaryData: 'bar',
       ownerId: 'person1'
     };
@@ -40,6 +42,8 @@ describe('Property chain code', () => {
 
     beforeEach('Write some property data', async () => {
       createRequest = {
+        latitude: 0,
+        longitude: 0,
         propertyId: 'foo',
         boundaryData: 'bar',
         ownerId: 'person1'
