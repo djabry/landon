@@ -27,6 +27,10 @@ export class AppComponent implements OnInit {
 
   }
 
+  randomElement<T>(array: T[]): T {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
   generateRandomCoordinates(start: Position): LatLngLiteral[] {
     let bearing = 0;
     let distance = 1;
@@ -34,10 +38,11 @@ export class AppComponent implements OnInit {
     const points = [
       point
     ];
-
+    const angles = [0, 0, 45, 90];
+    const distances = [1, 2, 3, 4, 4];
     while (bearing < 359) {
-      bearing += Math.round(Math.random() * 20);
-      distance = Math.random() * 5;
+      bearing += Math.min(this.randomElement(angles), 360);
+      distance = this.randomElement(distances);
       point = geolib.computeDestinationPoint(point, distance, bearing);
       points.push(point);
     }
