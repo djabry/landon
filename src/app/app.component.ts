@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     const angles = [0, 0, 45, 90];
     const distances = [1, 2, 3, 4, 4];
     while (bearing < 359) {
-      bearing += Math.min(this.randomElement(angles), 360);
+      bearing += Math.min(this.randomElement(angles), 300);
       distance = this.randomElement(distances);
       point = geolib.computeDestinationPoint(point, distance, bearing);
       points.push(point);
