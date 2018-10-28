@@ -8,6 +8,7 @@ import {Property} from './property';
 import {SetOwnerRequest} from './set.owner.request';
 import {FunctionName} from './function.name';
 import * as geolib from 'geolib';
+import {RandomPolygonGenerator} from '../../src/app/random.polygon.generator';
 
 let instance: PropertyChainCode;
 let stub;
@@ -83,7 +84,10 @@ describe('Property chain code', () => {
 
   describe('Properties close together', () =>  {
 
-    beforeEach('Create some properties', () => {
+    let polyGen: RandomPolygonGenerator;
+
+    it('Create some properties with overlapping boundaries', async () => {
+      polyGen = new RandomPolygonGenerator();
       const centralPoint = {
         latitude: 0,
         longitude: 0
@@ -91,7 +95,7 @@ describe('Property chain code', () => {
       const centralProperty: CreatePropertyRequest = {
         ...centralPoint,
         propertyId: 'central',
-        boundaryData: [{latitude: 0, longitude: 0}],
+        boundaryData: polyGen.generatePolygon(centralPoint),
         ownerId: 'person1'
       };
 
@@ -99,8 +103,8 @@ describe('Property chain code', () => {
 
       const topProperty = {
         ...topPoint,
+        boundaryData: polyGen.generatePolygon(centralPoint),
         propertyId: 'top',
-        boundaryData: [{latitude: 0, longitude: 0}],
         ownerId: 'person2'
       };
 
@@ -109,7 +113,7 @@ describe('Property chain code', () => {
       const eastProperty = {
         ...eastPoint,
         propertyId: 'east',
-        boundaryData: [{latitude: 0, longitude: 0}],
+        boundaryData: polyGen.generatePolygon(centralPoint),
         ownerId: 'person3'
       };
 
@@ -118,7 +122,7 @@ describe('Property chain code', () => {
       const southProperty = {
         ...southPoint,
         propertyId: 'south',
-        boundaryData: [{latitude: 0, longitude: 0}],
+        boundaryData: polyGen.generatePolygon(centralPoint),
         ownerId: 'person3'
       };
 
@@ -127,9 +131,23 @@ describe('Property chain code', () => {
       const westProperty = {
         ...westPoint,
         propertyId: 'west',
-        boundaryData: [{latitude: 0, longitude: 0}],
+        boundaryData: polyGen.generatePolygon(centralPoint),
         ownerId: 'person4'
       };
+
+      const createPropertyRequests = [centralProperty, eastProperty, southProperty, westProperty];
+
+      const responses = [];
+      for (const request of createPropertyRequests) {
+        const writeResponse = await stub.mockInvoke('tx1', [FunctionName.createProperty, JSON.stringify(request)]);
+        responses.push(writeResponse);
+      }
+
+      const failedWrite = responses.find(response => {
+        return response.status !== 200;
+      });
+
+      expect(failedWrite).to.be.an('object', 'Should have failed to create some properties');
 
     });
 

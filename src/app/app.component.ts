@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {LatLngLiteral} from '@agm/core';
 import {AuthenticationService} from './authentication.service';
 import * as geolib from 'geolib';
-import {Property} from '../../contracts/src/property';
 import {CreatePropertyRequest} from '../../contracts/src/create.property.request';
+import {RandomPolygonGenerator} from './random.polygon.generator';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   oldPaths: Array<LatLngLiteral[]>;
   property: CreatePropertyRequest;
 
-  constructor(private authService: AuthenticationService) {
+  constructor(private authService: AuthenticationService, private polygonGen: RandomPolygonGenerator) {
   }
 
   guid() {
@@ -49,28 +49,10 @@ export class AppComponent implements OnInit {
 
   }
 
-  randomElement<T>(array: T[]): T {
-    return array[Math.floor(Math.random() * array.length)];
-  }
-
   generateRandomCoordinates(start: Position): LatLngLiteral[] {
-    let bearing = 0;
-    let distance = 1;
-    let point = {latitude: start.coords.latitude, longitude: start.coords.longitude};
-    const points = [
-      point
-    ];
-    const angles = [0, 0, 45, 90];
-    const distances = [1, 2, 3, 4, 4];
-    while (bearing < 270) {
-      bearing += this.randomElement(angles);
-      bearing = Math.min(bearing, 270);
-      distance = this.randomElement(distances);
-      point = geolib.computeDestinationPoint(point, distance, bearing);
-      points.push(point);
-    }
-
-    return points.map(p => ({lat: p.latitude, lng: p.longitude}));
+    return this.polygonGen
+      .generatePolygon({latitude: start.coords.latitude, longitude: start.coords.longitude})
+      .map(l => ({lat: l.latitude, lng: l.longitude}));
 
 
   }
