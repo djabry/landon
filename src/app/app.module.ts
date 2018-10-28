@@ -6,21 +6,33 @@ import { AppComponent } from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
-import {Form, FormsModule} from '@angular/forms';
-import {MatButtonModule, MatCardModule, MatDialogModule, MatIconModule, MatInputModule, MatToolbarModule} from '@angular/material';
+import { FormsModule} from '@angular/forms';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatDialogModule,
+  MatIconModule,
+  MatInputModule,
+  MatProgressBar, MatProgressBarModule,
+  MatToolbarModule
+} from '@angular/material';
 import { CredentialsComponent } from './credentials/credentials.component';
 import { DetailComponent } from './detail/detail.component';
+import { ProgressComponent } from './progress/progress.component';
 
 @NgModule({
   entryComponents: [
-    CredentialsComponent
+    CredentialsComponent,
+    ProgressComponent
   ],
   declarations: [
     AppComponent,
     CredentialsComponent,
-    DetailComponent
+    DetailComponent,
+    ProgressComponent
   ],
   imports: [
+    MatProgressBarModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
