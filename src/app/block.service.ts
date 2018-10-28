@@ -52,8 +52,8 @@ export class BlockService {
     return this.invoke<FindPropertyRequest, Property>(findPropertyRequest, FunctionName.findProperty);
   }
 
-  async createProperty(request: CreatePropertyRequest): Promise<void> {
-    await this.invoke(request, FunctionName.createProperty);
+  async createProperty(request: CreatePropertyRequest): Promise<any> {
+    return await this.invoke(request, FunctionName.createProperty);
   }
 
 }

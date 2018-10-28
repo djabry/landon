@@ -47,7 +47,7 @@ export class PropertyChainCode extends Chaincode {
         longitude: verifiedArgs.longitude
       }
     };
-    await stubHelper.putState(verifiedArgs.propertyId, property);
+    return await stubHelper.putState(verifiedArgs.propertyId, property);
   }
 
   async findProperties(stubHelper: StubHelper, args: string[]): Promise<Property[]> {
