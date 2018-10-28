@@ -6,6 +6,8 @@ import {DocType} from './doc.type';
 import {createHash} from 'crypto';
 import {FindPropertyRequest} from './find.property.request';
 import {SetOwnerRequest} from './set.owner.request';
+import {GeoCoordinate} from './geo.coordinate';
+import * as geolib from 'geolib';
 
 export class PropertyChainCode extends Chaincode {
 
@@ -17,6 +19,8 @@ export class PropertyChainCode extends Chaincode {
       ownerId: string().required(),
       boundaryData: string().required() // TODO: Use a URL pointing to the binary data in future to enable usage of large documents
     }));
+    const closeProperties =
+      await this.findCloseProperties(stubHelper, {latitude: verifiedArgs.latitude, longitude: verifiedArgs.longitude});
 
     // Create hash of the boundary data
     const boundaryHash = await this.calculateHah(verifiedArgs.boundaryData);
@@ -33,13 +37,13 @@ export class PropertyChainCode extends Chaincode {
     await stubHelper.putState(verifiedArgs.propertyId, property);
   }
 
-  async findCloseProperties(stubHelper: StubHelper, id: string, property: Property): Promise<Property[]> {
+  async findCloseProperties(stubHelper: StubHelper, loc: GeoCoordinate): Promise<Property[]> {
     const distance = 100;
-    const bottomPoint = geolib.computeDestinationPoint(property.centre, distance, 180);
-    const topPoint = geolib.computeDestinationPoint(property.centre, distance, 0);
-    const eastPoint = geolib.computeDestinationPoint(property.centre, distance, 90);
-    const westPoint = geolib.computeDestinationPoint(property.centre, distance, 270);
-    const properties = await stubHelper.getQueryResultAsList({
+    const bottomPoint = geolib.computeDestinationPoint(loc, distance, 180);
+    const topPoint = geolib.computeDestinationPoint(loc, distance, 0);
+    const eastPoint = geolib.computeDestinationPoint(loc, distance, 90);
+    const westPoint = geolib.computeDestinationPoint(loc, distance, 270);
+    const results = await stubHelper.getQueryResultAsList({
       selector: {
         '$and': [
           {
@@ -67,8 +71,15 @@ export class PropertyChainCode extends Chaincode {
       }
     });
 
-    return properties as Property[];
+    const properties = results as Property[];
+    const coordinates = properties.map(property => ({...property.centre, property}));
+    geolib.orderByDistance(loc, coordinates);
+    return coordinates.map(c => c.property);
 
+  }
+
+  async overlaps(property1: Property, property2: Property): Promise<boolean> {
+    return false;
   }
 
   async setOwner(stubHelper: StubHelper, args: string[]): Promise<void> {
