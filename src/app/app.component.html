@@ -1,7 +1,8 @@
-
-<mat-toolbar color="primary">
-  <div>{{title}}</div>
-</mat-toolbar>
-<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-  <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-</agm-map>
+<div class="example-container">
+  <mat-toolbar color="primary">
+    <div>{{title}}</div>
+  </mat-toolbar>
+  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+  </agm-map>
+</div>

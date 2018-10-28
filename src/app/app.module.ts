@@ -7,14 +7,23 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
 import {Form, FormsModule} from '@angular/forms';
-import {MatToolbarModule} from '@angular/material';
+import {MatButtonModule, MatDialogModule, MatIconModule, MatInputModule, MatToolbarModule} from '@angular/material';
+import { CredentialsComponent } from './credentials/credentials.component';
 
 @NgModule({
+  entryComponents: [
+    CredentialsComponent
+  ],
   declarations: [
-    AppComponent
+    AppComponent,
+    CredentialsComponent
   ],
   imports: [
+    MatIconModule,
+    MatButtonModule,
     FormsModule,
+    MatInputModule,
+    MatDialogModule,
     HttpClientModule,
     BrowserAnimationsModule,
     BrowserModule,

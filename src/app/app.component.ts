@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {LatLngLiteral} from '@agm/core';
+import {AuthenticationService} from './authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +9,12 @@ import {Component, OnInit} from '@angular/core';
 })
 export class AppComponent implements OnInit {
   title = 'Landon';
-  lat = 51.678418;
+  lat = 51;
   lng = 0;
   zoom = 10;
+
+  constructor(private authService: AuthenticationService) {
+  }
 
   ngOnInit(): void {
     window.navigator.geolocation.getCurrentPosition((position) => {
@@ -17,5 +22,7 @@ export class AppComponent implements OnInit {
       this.lng = position.coords.longitude;
       this.zoom = 20;
     });
+    this.authService.requestCredentials();
   }
+
 }

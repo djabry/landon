@@ -7,13 +7,14 @@ import {OracleInvokeRequest} from './oracle.invoke.request';
 import {Channel} from '../../contracts/src/channel';
 import {ChainCodeName} from '../../contracts/src/chain.code.name';
 import {FunctionName} from '../../contracts/src/function.name';
+import {AuthenticationService} from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlockService {
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private authService: AuthenticationService) {
   }
 
   toOracleRequest(functionName: FunctionName, input: any): OracleInvokeRequest {
@@ -27,6 +28,7 @@ export class BlockService {
   }
 
   async findProperty(propertyId: string): Promise<Property> {
+    const creds = await this.authService.requestCredentials();
     const resource = `${environment.oracleEndpoint}/bcsgw/rest/v1/transaction/invocation`;
     const findPropertyRequest: FindPropertyRequest = {
       id: propertyId
@@ -34,6 +36,7 @@ export class BlockService {
     const request = this.toOracleRequest(FunctionName.findProperty, findPropertyRequest);
     const response = await this.httpClient.post(resource, resource, {
       headers: {
+        ...this.authService.toRequestHeaders(creds),
         'Content-Type': 'application/json'
       }
     }).toPromise();
