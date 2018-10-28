@@ -1,5 +1,5 @@
 import {Chaincode, Helpers, StubHelper} from '@theledger/fabric-chaincode-utils';
-import {number, object, string} from 'yup';
+import {array, number, object, string} from 'yup';
 import {CreatePropertyRequest} from './create.property.request';
 import {Property} from './property';
 import {DocType} from './doc.type';
@@ -8,8 +8,13 @@ import {FindPropertyRequest} from './find.property.request';
 import {SetOwnerRequest} from './set.owner.request';
 import {GeoCoordinate} from './geo.coordinate';
 import * as geolib from 'geolib';
+import {ObjectStore} from './object.store';
 
 export class PropertyChainCode extends Chaincode {
+
+  constructor(private objectStore: ObjectStore) {
+    super();
+  }
 
   async createProperty(stubHelper: StubHelper, args: string[]): Promise<void> {
     const verifiedArgs = await Helpers.checkArgs<CreatePropertyRequest>(args[0], object({
@@ -17,26 +22,28 @@ export class PropertyChainCode extends Chaincode {
       latitude: number().required(),
       longitude: number().required(),
       ownerId: string().required(),
-      boundaryData: string().required() // TODO: Use a URL pointing to the binary data in future to enable usage of large documents
+      boundaryData: array().required() // TODO: Use a URL pointing to the binary data in future to enable usage of large documents
     }));
 
-    const newBoundaries = this.toPolygon(verifiedArgs.boundaryData);
+    // const newBoundaries = this.toPolygon(verifiedArgs.boundaryData);
     const closeProperties =
       await this.findCloseProperties(stubHelper, {latitude: verifiedArgs.latitude, longitude: verifiedArgs.longitude});
     for (const p of closeProperties) {
-      const boundaryData = await this.getBoundaryData(p);
-      if (this.overlaps(boundaryData, newBoundaries)) {
+      const boundaryData = await this.getBoundaryData(p.id);
+      if (this.overlaps(boundaryData, verifiedArgs.boundaryData)) {
         throw new Error('Property overlaps another');
       }
     }
 
     // Create hash of the boundary data
-    const boundaryHash = await this.calculateHah(verifiedArgs.boundaryData);
+    const boundaryHash = await this.calculateHah(JSON.stringify(verifiedArgs.boundaryData));
 
     const property: Property = {
+      id: verifiedArgs.propertyId,
       docType: DocType.Property,
       ownerId: verifiedArgs.ownerId,
       boundaryHash: boundaryHash,
+      boundaryData: verifiedArgs.boundaryData,
       centre: {
         latitude: verifiedArgs.latitude,
         longitude: verifiedArgs.longitude
@@ -81,7 +88,7 @@ export class PropertyChainCode extends Chaincode {
     const properties = results as Property[];
     const coordinates = properties.map(property => ({...property.centre, property}));
     geolib.orderByDistance(loc, coordinates);
-    return coordinates.map(c => c.property).slice(0, 6);
+    return coordinates.map(c => c.property);
 
   }
 
@@ -93,8 +100,9 @@ export class PropertyChainCode extends Chaincode {
    return !!bounds1.find(bound => geolib.isPointInside(bound, bounds2));
   }
 
-  async getBoundaryData(property: Property): Promise<GeoCoordinate[]> {
-    return null;
+  async getBoundaryData(propertyId: string): Promise<GeoCoordinate[]> {
+    const data = await this.objectStore.get(propertyId);
+    return JSON.parse(data);
   }
 
   async setOwner(stubHelper: StubHelper, args: string[]): Promise<void> {
@@ -105,7 +113,6 @@ export class PropertyChainCode extends Chaincode {
     const property = await this.findPropertyFromId(stubHelper, verifiedArgs.propertyId);
     property.ownerId = verifiedArgs.ownerId;
     return await stubHelper.putState(verifiedArgs.propertyId, property);
-
   }
 
   async findProperty(stubHelper: StubHelper, args: string[]): Promise<Property>  {

@@ -8,13 +8,14 @@ import {Property} from './property';
 import {SetOwnerRequest} from './set.owner.request';
 import {FunctionName} from './function.name';
 import * as geolib from 'geolib';
+import {ObjectStore} from './object.store';
 
 let instance: PropertyChainCode;
 let stub;
 describe('Property chain code', () => {
 
   before('Create the chain code and stub', () => {
-    instance = new PropertyChainCode();
+    instance = new PropertyChainCode(new ObjectStore());
   });
 
   beforeEach('Create a stub', () => {
@@ -31,7 +32,7 @@ describe('Property chain code', () => {
       propertyId: 'foo',
       latitude: 0,
       longitude: 0,
-      boundaryData: 'bar',
+      boundaryData: [{latitude: 0, longitude: 0}],
       ownerId: 'person1'
     };
     const response = await stub.mockInvoke('tx1', [FunctionName.createProperty, JSON.stringify(request)]);
@@ -46,7 +47,7 @@ describe('Property chain code', () => {
         latitude: 0,
         longitude: 0,
         propertyId: 'foo',
-        boundaryData: 'bar',
+        boundaryData: [{latitude: 0, longitude: 0}],
         ownerId: 'person1'
       };
       const writeResponse = await stub.mockInvoke('tx1', [FunctionName.createProperty, JSON.stringify(createRequest)]);
@@ -91,7 +92,7 @@ describe('Property chain code', () => {
       const centralProperty: CreatePropertyRequest = {
         ...centralPoint,
         propertyId: 'central',
-        boundaryData: 'bar',
+        boundaryData: [{latitude: 0, longitude: 0}],
         ownerId: 'person1'
       };
 
@@ -100,7 +101,7 @@ describe('Property chain code', () => {
       const topProperty = {
         ...topPoint,
         propertyId: 'top',
-        boundaryData: 'foo',
+        boundaryData: [{latitude: 0, longitude: 0}],
         ownerId: 'person2'
       };
 
@@ -109,7 +110,7 @@ describe('Property chain code', () => {
       const eastProperty = {
         ...eastPoint,
         propertyId: 'east',
-        boundaryData: 'foo',
+        boundaryData: [{latitude: 0, longitude: 0}],
         ownerId: 'person3'
       };
 
@@ -118,7 +119,7 @@ describe('Property chain code', () => {
       const southProperty = {
         ...southPoint,
         propertyId: 'south',
-        boundaryData: 'foo',
+        boundaryData: [{latitude: 0, longitude: 0}],
         ownerId: 'person3'
       };
 
@@ -127,7 +128,7 @@ describe('Property chain code', () => {
       const westProperty = {
         ...westPoint,
         propertyId: 'west',
-        boundaryData: 'foo',
+        boundaryData: [{latitude: 0, longitude: 0}],
         ownerId: 'person4'
       };
 
