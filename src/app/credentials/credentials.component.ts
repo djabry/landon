@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {MatDialogRef} from '@angular/material';
 import {UsernamePasswordCredentials} from '../username.password.credentials';
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-credentials',
   templateUrl: './credentials.component.html',
   styleUrls: ['./credentials.component.scss']
 })
 export class CredentialsComponent implements OnInit {
 
-  hide: boolean;
   password: string;
   username: string;
+  hide = true;
   constructor(public ref: MatDialogRef<CredentialsComponent>) {
 
   }

@@ -19,6 +19,7 @@ export class AuthenticationService {
       return JSON.parse(localStorage.getItem(this.credentialsKey));
     } else {
       const credentialsDialog = this.dialog.open(CredentialsComponent);
+      credentialsDialog.disableClose = true;
       const result = await credentialsDialog.afterClosed().toPromise() as UsernamePasswordCredentials;
       await this.validateCredentials(result);
       localStorage.setItem(this.credentialsKey, JSON.stringify(result));
@@ -33,8 +34,8 @@ export class AuthenticationService {
   }
 
   async validateCredentials(creds: UsernamePasswordCredentials) {
-    const response = await this.httpClient.get(`${environment.oracleEndpoint}/bcsgw/rest/version`, {
+    /*const response = await this.httpClient.get(`${environment.oracleEndpoint}/bcsgw/rest/version`, {
       headers: this.toRequestHeaders(creds)
-    }).toPromise();
+    }).toPromise();*/
   }
 }
