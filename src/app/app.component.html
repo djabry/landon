@@ -2,10 +2,15 @@
   <mat-toolbar color="primary">
     <div>{{title}}</div>
   </mat-toolbar>
-  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-    <!--<agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>-->
-    <div *ngIf="paths">
-      <agm-polygon [paths]="paths"></agm-polygon>
+  <div class="main">
+    <app-detail></app-detail>
+    <div class="map">
+      <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+        <!--<agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>-->
+        <div *ngIf="paths">
+          <agm-polygon [paths]="paths"></agm-polygon>
+        </div>
+      </agm-map>
     </div>
-  </agm-map>
+  </div>
 </div>

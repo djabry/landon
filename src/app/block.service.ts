@@ -8,6 +8,7 @@ import {Channel} from '../../contracts/src/channel';
 import {ChainCodeName} from '../../contracts/src/chain.code.name';
 import {FunctionName} from '../../contracts/src/function.name';
 import {AuthenticationService} from './authentication.service';
+import {CreatePropertyRequest} from '../../contracts/src/create.property.request';
 
 @Injectable({
   providedIn: 'root'
@@ -27,21 +28,32 @@ export class BlockService {
     };
   }
 
-  async findProperty(propertyId: string): Promise<Property> {
+  async invoke<I, O>(input: I, functionName: FunctionName): Promise<O> {
     const creds = await this.authService.requestBlockchainCredentials();
     const resource = `${environment.proxyEndpoint}/invoke`;
-    const findPropertyRequest: FindPropertyRequest = {
-      id: propertyId
-    };
-    const request = this.toOracleRequest(FunctionName.findProperty, findPropertyRequest);
-    const response = await this.httpClient.post(resource, resource, {
+    const request = this.toOracleRequest(functionName, input);
+    const response = await this.httpClient.post(resource, JSON.stringify(request), {
       headers: {
         ...this.authService.toRequestHeaders(creds),
         'Content-Type': 'application/json'
       }
     }).toPromise();
+    return response as O;
+  }
 
-    return null;
+  async listProperties(): Promise<Property[]> {
+    return [];
+  }
+
+  async findProperty(propertyId: string): Promise<Property> {
+    const findPropertyRequest: FindPropertyRequest = {
+      id: propertyId
+    };
+    return this.invoke<FindPropertyRequest, Property>(findPropertyRequest, FunctionName.findProperty);
+  }
+
+  async createProperty(request: CreatePropertyRequest): Promise<void> {
+    await this.invoke(request, FunctionName.createProperty);
   }
 
 }

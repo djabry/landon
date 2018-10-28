@@ -6,3 +6,16 @@ mat-toolbar {
   height: 60px;
 }
 
+app-detail {
+  width: 30vw;
+  height: calc(100vh - 60px);
+}
+
+.map {
+  width: 70vw;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+}

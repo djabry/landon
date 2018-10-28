@@ -7,8 +7,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
 import { AgmCoreModule } from '@agm/core';
 import {Form, FormsModule} from '@angular/forms';
-import {MatButtonModule, MatDialogModule, MatIconModule, MatInputModule, MatToolbarModule} from '@angular/material';
+import {MatButtonModule, MatCardModule, MatDialogModule, MatIconModule, MatInputModule, MatToolbarModule} from '@angular/material';
 import { CredentialsComponent } from './credentials/credentials.component';
+import { DetailComponent } from './detail/detail.component';
 
 @NgModule({
   entryComponents: [
@@ -16,9 +17,11 @@ import { CredentialsComponent } from './credentials/credentials.component';
   ],
   declarations: [
     AppComponent,
-    CredentialsComponent
+    CredentialsComponent,
+    DetailComponent
   ],
   imports: [
+    MatCardModule,
     MatIconModule,
     MatButtonModule,
     FormsModule,

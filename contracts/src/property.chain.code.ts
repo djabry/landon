@@ -50,6 +50,15 @@ export class PropertyChainCode extends Chaincode {
     await stubHelper.putState(verifiedArgs.propertyId, property);
   }
 
+  async findProperties(stubHelper: StubHelper, args: string[]): Promise<Property[]> {
+    const verifiedArgs = await Helpers.checkArgs<GeoCoordinate>(args[0], object({
+      latitude: number().required(),
+      longitude: number().required(),
+    }));
+
+    return this.findCloseProperties(stubHelper, verifiedArgs);
+  }
+
   async findCloseProperties(stubHelper: StubHelper, loc: GeoCoordinate): Promise<Property[]> {
     const distance = 100;
     const bottomPoint = geolib.computeDestinationPoint(loc, distance, 180);
