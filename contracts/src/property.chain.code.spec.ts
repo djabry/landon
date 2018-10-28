@@ -7,6 +7,7 @@ import {FindPropertyRequest} from './find.property.request';
 import {Property} from './property';
 import {SetOwnerRequest} from './set.owner.request';
 import {FunctionName} from './function.name';
+import * as geolib from 'geolib';
 
 let instance: PropertyChainCode;
 let stub;
@@ -77,6 +78,62 @@ describe('Property chain code', () => {
       expect(propertyObject.ownerId).to.equal(request.ownerId);
 
     });
+
+  });
+
+  describe('Properties close together', () =>  {
+
+    beforeEach('Create some properties', () => {
+      const centralPoint = {
+        latitude: 0,
+        longitude: 0
+      };
+      const centralProperty: CreatePropertyRequest = {
+        ...centralPoint,
+        propertyId: 'central',
+        boundaryData: 'bar',
+        ownerId: 'person1'
+      };
+
+      const topPoint = geolib.computeDestinationPoint(centralPoint, 50, 0);
+
+      const topProperty = {
+        ...topPoint,
+        propertyId: 'top',
+        boundaryData: 'foo',
+        ownerId: 'person2'
+      };
+
+      const eastPoint = geolib.computeDestinationPoint(centralPoint, 50, 90);
+
+      const eastProperty = {
+        ...eastPoint,
+        propertyId: 'east',
+        boundaryData: 'foo',
+        ownerId: 'person3'
+      };
+
+      const southPoint = geolib.computeDestinationPoint(centralPoint, 50, 180);
+
+      const southProperty = {
+        ...southPoint,
+        propertyId: 'south',
+        boundaryData: 'foo',
+        ownerId: 'person3'
+      };
+
+      const westPoint = geolib.computeDestinationPoint(centralPoint, 50, 270);
+
+      const westProperty = {
+        ...westPoint,
+        propertyId: 'west',
+        boundaryData: 'foo',
+        ownerId: 'person4'
+      };
+
+    });
+
+
 
   });
 
