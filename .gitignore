@@ -39,3 +39,4 @@ testem.log
 Thumbs.db
 contracts/node_modules
 contracts/dist
+package-lock.json
