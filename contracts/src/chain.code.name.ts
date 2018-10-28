@@ -1,3 +1,3 @@
 export enum ChainCodeName {
-  landon = 'landon'
+  landon = 'landon1'
 }
